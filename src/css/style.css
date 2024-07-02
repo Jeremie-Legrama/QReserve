@@ -616,6 +616,110 @@ label.customer-account{
   justify-content: center; /* Horizontally center the modal */
 }
 
+.table-box-not-available{
+  background-color: #d39700; 
+  border-radius: 10px;
+  padding: 2%;
+  font-size: 20px;
+  padding: 0%;
+  margin: 0%;
+  /* Change the color to whatever you prefer */
+}
+
+
+.table-box{
+  background-color: #ffb800;
+  border-radius: 10px;
+  padding: 2%;
+  font-size: 23px;
+  padding: 0%;
+  margin: 0%;
+}
+
+
+.table-number{
+  font-weight: 600;
+  padding-left: 5%;
+  font-size: 20px;
+}
+
+.table-time{
+  font-weight: 600;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 5%;
+  font-size: 20px;
+}
+
+.table-oras{
+  font-weight: 600;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 5%;
+}
+
+#tangina{
+  color: #073109;
+}
+
+.bi-fullscreen {
+  color: white;
+  width: 100%;
+  display: flex;
+  justify-content: end;
+  transition: transform 0.3s ease; /* Add transition for smooth effect */
+}
+
+/* Pagination */
+  /* Pagination button default color */
+  .dataTables_wrapper .dataTables_paginate .pagination .page-link {
+    color: #04471C;
+}
+/* Pagination button active color */
+.dataTables_wrapper .dataTables_paginate .pagination .page-item.active .page-link {
+    background-color: #04471C;
+    border-color: #04471C;
+    color: #FFB800;
+    font-weight: 600;
+}
+/* Pagination button hover color */
+.dataTables_wrapper .dataTables_paginate .pagination .page-link:hover {
+    color: #04471C;
+    
+}
+
+
+#accept-reservation, #edit-admin, #edit-member {
+  background-color: #04471C;
+  color: #FFB800;
+  border: none;
+  font-weight: 600;
+  width: 5rem;
+}
+
+#accept-reservation:hover,  #edit-admin:hover, #edit-member:hover {
+  background-color: #0d2818;
+}
+
+#reject-reservation, #delete-admin, #delete-member{
+  background-color: #FFB800;
+  color: #0d2818;
+  border: none;
+  font-weight: 600;
+  width: 5rem;
+}
+
+#reject-reservation:hover, #delete-admin:hover,#delete-member:hover {
+  background-color: #eeab00;
+}
+
+
+
+
+
+
 @media (max-width: 768px) {
   .bevitore-logo {
       width: 25%;
