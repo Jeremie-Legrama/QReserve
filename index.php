@@ -21,9 +21,11 @@
   <link href="https://fonts.googleapis.com/css2?family=Akronim&family=Anton&family=Aoboshi+One&family=Audiowide&family=Black+Han+Sans&family=Braah+One&family=Bungee+Outline&family=Hammersmith+One&family=Krona+One&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet" />
 
   <link rel="icon" href="src/images/Bevitore-logo.png" type="image/x-icon">
+  <link rel="stylesheet" href="src/loader/loader.css">
 </head>
 
 <body class="index-landing">
+<!-- <?php include "src/loader/loader.html"; ?> -->
   <div class="container-fluid homepage">
     <div class="home">
       <img src="src/images/Bevitore Billiards Hall Logo.png" alt="Bevitore Logo" class="bevitore-logo">
@@ -32,6 +34,32 @@
       <a href="login.php" type="button" class="btn btn-primary fw-bold start-button" id="index-button">Click to start session</a>
     </div>
   </div>
+
+  <div id="updateTable" style="display:none;"><!--this div's only purpose is to help table update--></div>
+    <script>
+      $(document).ready(function() {
+        // Function to update table content
+        function updateTable() {
+          $.ajax({
+            url: 'pool_table.php',
+            type: 'GET',
+            success: function(response) {
+              $('#updateTable').html(response);
+            }
+          });
+        }
+
+        // Initial table update
+        updateTable();
+
+        // Refresh table every 5 seconds
+        setInterval(updateTable, 1000); // Adjust interval as needed
+      });
+
+    </script> 
+<script src="src/loader/loader.js"></script>
+
+
 </body>
 
 </html>
