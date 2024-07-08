@@ -39,8 +39,7 @@ function validateRate(event) {
   const numericValue = value.replace(/[^0-9]/g, ''); // Allow only numeric characters
 
   if (numericValue.length <= 4) { // Limit the length to 4 digits
-      const formattedValue = new Intl.NumberFormat().format(numericValue);
-      input.value = formattedValue;
+      input.value = numericValue;
 
       // Check for minimum value
       if (numericValue === '' || parseInt(numericValue, 10) < 100) {
@@ -53,8 +52,7 @@ function validateRate(event) {
   } else {
       // If the input exceeds 4 digits, truncate the value
       const truncatedValue = numericValue.slice(0, 4);
-      const formattedTruncatedValue = new Intl.NumberFormat().format(truncatedValue);
-      input.value = formattedTruncatedValue;
+      input.value = truncatedValue;
 
       // Check for minimum value
       if (parseInt(truncatedValue, 10) < 100) {
@@ -211,30 +209,36 @@ function getUserInputs() {
 
 
     //add reservation
-$(document).ready(function() {
-  $('#submitWalkin').click(function(e) {
-    e.preventDefault();
-
-    var formData = new FormData($('#edit-service-form')[0]);
-
-    $.ajax({
-      type: 'POST',
-      url: 'service_crud.php', // Replace 'process_form.php' with the URL of your PHP script
-      data: formData,
-      processData: false,
-      contentType: false,
-      success: function(response) {
-        // Handle success response here
-        //alert(response); // For demonstration purposes, you can display an alert with the response
-        window.location.href = "service_management.php";
-      },
-      error: function(xhr, status, error) {
-        // Handle error
-        console.error(xhr.responseText);
-      }
+    $(document).ready(function() {
+      $('#submitWalkin').click(function(e) {
+        e.preventDefault();
+    
+        var formData = new FormData($('#edit-service-form')[0]);
+    
+        // Disable the button to prevent multiple clicks
+        $(this).prop('disabled', true);
+    
+        $.ajax({
+          type: 'POST',
+          url: 'service_crud.php', // Replace 'process_form.php' with the URL of your PHP script
+          data: formData,
+          processData: false,
+          contentType: false,
+          success: function(response) {
+            // Handle success response here
+            //alert(response); // For demonstration purposes, you can display an alert with the response
+            window.location.href = "service_management.php";
+          },
+          error: function(xhr, status, error) {
+            // Handle error
+            console.error(xhr.responseText);
+            // Re-enable the button if there's an error
+            $('#submitWalkin').prop('disabled', false);
+          }
+        });
+      });
     });
-  });
-});
+    
 
 
 
