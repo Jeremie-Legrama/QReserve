@@ -159,7 +159,7 @@ if (isset($_SESSION['userMemberID'])) {
   </div>
 </div>
 
-<div class="col-md-3 mb-3">
+            <div class="col-md-3 mb-3">
   <label for="selectStartTime" class="form-label">Start Time <span>*</span></label>
   <input type="time" class="form-control" id="selectStartTime" name="selectStartTime" required min="10:00" oninput="adjustEndTime()">
   <div class="valid-feedback">
