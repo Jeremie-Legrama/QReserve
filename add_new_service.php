@@ -4,6 +4,18 @@ date_default_timezone_set('Asia/Manila');
 if (isset($_SESSION["userSuperAdminID"])) {
     include "connect_database.php";
     include "src/get_data_from_database/get_services.php";
+
+    include "src/get_data_from_database/get_super_admin_accounts.php";
+    include "encodeDecode.php";
+    $key = "TheGreatestNumberIs73";
+    $superAdminSessionID = $_SESSION['userSuperAdminID'];
+    $superAdminUsername = "";
+
+    foreach ($arraySuperAdminAccount as $superAdmin) {
+        if ($superAdmin['superAdminID'] === $superAdminSessionID) {
+            $superAdminUsername = decryptData($superAdmin['superAdminUsername'], $key);
+        }
+    }
 ?>
     <!DOCTYPE html>
     <!-- Created by CodingLab |www.youtube.com/CodingLabYT-->
@@ -67,20 +79,18 @@ if (isset($_SESSION["userSuperAdminID"])) {
                         <div class="invalid-feedback">Please provide a valid rate.</div>
                     </div>
                     <div class="col-md-6 mb-2">
-    <label for="capacity" class="form-label">Capacity <span>*</span></label>
-    <input type="text" class="form-control" id="capacity" placeholder="Enter capacity here" name="capacity" maxlength="2" required onblur="handleCapacityInput(event)" oninput="validateCapacity(event)">
-    <div class="valid-feedback">Looks good!</div>
-    <div class="invalid-feedback">Please provide a valid capacity between 2 and 50.</div>
-</div>
+                        <label for="capacity" class="form-label">Capacity <span>*</span></label>
+                        <input type="text" class="form-control" id="capacity" placeholder="Enter capacity here" name="capacity" maxlength="2" required onblur="handleCapacityInput(event)" oninput="validateCapacity(event)">
+                        <div class="valid-feedback">Looks good!</div>
+                        <div class="invalid-feedback">Please provide a valid capacity between 1 and 50.</div>
+                    </div>
 
-
-<div class="col-md-10 mb-2">
-    <label for="editImage" class="form-label">Image</label>
-    <input type="file" class="form-control" id="editImage" name="editImage" accept=".jpeg, .jpg, .png" onchange="validateImage(event)">
-    <div class="valid-feedback">Looks good!</div>
-    <div class="invalid-feedback">Please provide a valid file. Accepted formats: jpg, jpeg, png. Maximum size: 5MB.</div>
-    <img id="imagePreview" style="display:none; max-width: 100px; margin-top: 10px;" />
-</div>
+                    <div class="col-md-10 mb-2">
+                        <label for="serviceImage" class="form-label">Image <span>*</span></label>
+                        <input type="file" class="form-control" id="serviceImage" name="serviceImage" accept=".jpeg, .jpg, .png" required onchange="validateImage(event)">
+                        <div class="valid-feedback"><!-- Looks good! --></div>
+                        <div class="invalid-feedback" id="imageFeedback">Please provide a valid file.</div>
+                    </div>
                     <div class="col-md-2 mb-2">
                         <img id="imagePreview" src="#" alt="Image Preview">
                     </div>
@@ -125,7 +135,7 @@ if (isset($_SESSION["userSuperAdminID"])) {
                         <h2 class="modal-title  fw-bold text-center" id="success"><img src="src/images/icons/available-worldwide.gif" alt="Wait Icon" class="modal-icons">Success!</h2>
                     </div>
                     <div class="modal-body text-center">
-                        You have successfully registered a new service.
+                        You have successfully added a new service.
                     </div>
                     <div class="modal-footer">
                         <!-- <button class="btn btn-primary create-button" id="proceed" data-bs-target="#" data-bs-toggle="modal">Proceed</button> -->

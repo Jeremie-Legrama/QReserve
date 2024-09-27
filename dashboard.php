@@ -8,6 +8,19 @@ if (isset($_SESSION["userSuperAdminID"])) {
 
   $visitors = $totalVisitor;
 
+
+
+  include "src/get_data_from_database/get_super_admin_accounts.php";
+    include "encodeDecode.php";
+  $key = "TheGreatestNumberIs73";
+  $superAdminSessionID = $_SESSION['userSuperAdminID'];
+  $superAdminUsername = "";
+
+  foreach($arraySuperAdminAccount as $superAdmin){
+    if($superAdmin['superAdminID'] === $superAdminSessionID){
+      $superAdminUsername = decryptData($superAdmin['superAdminUsername'], $key);
+    } 
+  }
 ?>
   <!DOCTYPE html>
   <html lang="en" dir="ltr">
@@ -231,6 +244,29 @@ if (isset($_SESSION["userSuperAdminID"])) {
         }
       });
     </script>
+
+
+<!--execute delete member code to check if there is an expired member-->
+    <script>
+        function executePHP() {
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', 'delete_member_notification.php', true);
+            xhr.send();
+            xhr.onload = function() {
+                if (xhr.status != 200) {
+                    console.error(`Error ${xhr.status}: ${xhr.statusText}`);
+                } else {
+                    console.log(`Done, response received: ${xhr.response}`);
+                }
+            };
+            xhr.onerror = function() {
+                console.error('Request failed');
+            };
+        }
+
+        setInterval(executePHP, 4000);
+    </script>
+    
   </body>
 
   </html>

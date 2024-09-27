@@ -36,6 +36,15 @@ if (isset($_SESSION["userSuperAdminID"])) {
     }
   }
 
+  include "src/get_data_from_database/get_super_admin_accounts.php";
+  $superAdminSessionID = $_SESSION['userSuperAdminID'];
+  $superAdminUsername = "";
+
+  foreach ($arraySuperAdminAccount as $superAdmin) {
+    if ($superAdmin['superAdminID'] === $superAdminSessionID) {
+      $superAdminUsername = decryptData($superAdmin['superAdminUsername'], $key);
+    }
+  }
 ?>
   <!DOCTYPE html>
   <!-- Created by CodingLab |www.youtube.com/CodingLabYT-->
@@ -224,7 +233,7 @@ if (isset($_SESSION["userSuperAdminID"])) {
           </div>
           <div class="row justify-content-end mt-5">
             <div class="col-12 col-md-2 mb-2 mb-md-0">
-              <button class="btn btn-primary w-100 create-button" type="submit" id="create-admin-button">Create</button>
+              <button class="btn btn-primary w-100 create-button" type="submit" id="create-admin-button">Edit</button>
             </div>
             <div class="col-12 col-md-2 mb-2 mb-md-0">
               <button class="btn btn-outline-primary w-100 cancel-button" type="button">Cancel</button>

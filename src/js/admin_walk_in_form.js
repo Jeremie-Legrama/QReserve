@@ -137,27 +137,32 @@ $(document).ready(function () {
 function adjustEndTime() {
   const startTimeInput = document.getElementById('selectStartTime');
   const endTimeInput = document.getElementById('selectEndTime');
+  const endTimeFeedback = document.getElementById('endTimeFeedback');
 
   if (startTimeInput.value) {
-    const [startHour, startMinute] = startTimeInput.value.split(':');
-    if (parseInt(startHour) < 10) {
-      // If start time is before 10:00 AM, clear the end time input
+    const [startHour, startMinute] = startTimeInput.value.split(':').map(Number);
+
+    if (startHour < 10 || (startHour >= 0 && startHour < 3)) {
+      // If start time is invalid (before 10:00 AM or between 12:00 AM and 3:00 AM)
       endTimeInput.value = '';
-      startTimeInput.setCustomValidity('Start time must be after 10:00 AM.');
+      startTimeInput.setCustomValidity('Start time must be between 10:00 AM and 12:00 AM.');
     } else {
       startTimeInput.setCustomValidity('');
-      let endHour = parseInt(startHour) + 1;
-      const endMinute = startMinute;
+      let endHour = startHour + 1; // Adding 2 hours for minimum duration
+      let endMinute = startMinute;
 
-      // Handle hour overflow
+      // Handle hour overflow for the next day
       if (endHour >= 24) {
         endHour = endHour - 24;
       }
 
       // Format end hour and minute
       const formattedEndHour = endHour.toString().padStart(2, '0');
-      const formattedEndMinute = endMinute.padStart(2, '0');
+      const formattedEndMinute = endMinute.toString().padStart(2, '0');
       endTimeInput.value = `${formattedEndHour}:${formattedEndMinute}`;
+      endTimeInput.min = `${formattedEndHour}:${formattedEndMinute}`;
+      endTimeInput.max = '03:00';
+      endTimeFeedback.textContent = 'Please provide a valid end time.';
     }
   } else {
     // Clear the end time input if the start time is empty
@@ -165,8 +170,42 @@ function adjustEndTime() {
   }
 }
 
-// Add event listener
+
+function validateEndTime() {
+  const startTimeInput = document.getElementById('selectStartTime');
+  const endTimeInput = document.getElementById('selectEndTime');
+  const endTimeFeedback = document.getElementById('endTimeFeedback');
+
+  if (startTimeInput.value && endTimeInput.value) {
+    const [startHour, startMinute] = startTimeInput.value.split(':').map(Number);
+    const [endHour, endMinute] = endTimeInput.value.split(':').map(Number);
+
+    // Calculate total minutes for start and end times
+    const startTotalMinutes = startHour * 60 + startMinute;
+    const endTotalMinutes = endHour * 60 + endMinute;
+    let validEndTime = false;
+
+    if (endTotalMinutes < startTotalMinutes) {
+      // Case where end time is in the next day
+      validEndTime = (endTotalMinutes + 24 * 60 - startTotalMinutes) >= 120 && endHour <= 3;
+    } else {
+      // Case where end time is on the same day
+      validEndTime = (endTotalMinutes - startTotalMinutes) >= 120;
+    }
+
+    if (validEndTime) {
+      endTimeInput.setCustomValidity('');
+      endTimeFeedback.textContent = 'Please provide a valid end time.';
+    } else {
+      endTimeInput.setCustomValidity('End time must be at least 2 hours after start time and no later than 3:00 AM.');
+      endTimeFeedback.textContent = 'End time must be at least 2 hours after start time and no later than 3:00 AM.';
+    }
+  }
+}
+
+// Add event listeners
 document.getElementById('selectStartTime').addEventListener('input', adjustEndTime);
+document.getElementById('selectEndTime').addEventListener('input', validateEndTime);
 
 
 // Prevent typing in the date input fields
@@ -289,7 +328,13 @@ function getUserInputs() {
 
   // Calculate total price based on selected start and end times
   const startTime = new Date(`2024-06-14T${selectStartTime}`);
-  const endTime = new Date(`2024-06-14T${selectEndTime}`);
+  let endTime = new Date(`2024-06-14T${selectEndTime}`);
+
+  // If end time is earlier than start time, it means it extends to the next day
+  if (endTime < startTime) {
+    endTime.setDate(endTime.getDate() + 1);
+  }
+
   const durationInMinutes = (endTime - startTime) / (1000 * 60);
   const durationInHours = durationInMinutes / 60;
 
@@ -305,7 +350,7 @@ function getUserInputs() {
 
   // Get the selected price adjustment option
   const selectedOption = $('input[name="price-option"]:checked');
-  const priceAdjustment = parseInt(selectedOption.data('price'));
+  const priceAdjustment = selectedOption.attr('id') === 'member-button' ? -50 * Math.ceil(durationInHours) : 0;
 
   // Adjust the total price based on the selected option
   totalPrice += priceAdjustment;
@@ -332,7 +377,6 @@ function getUserInputs() {
     </div>
   `;
 }
-
 
 $('input[name="price-option"]').change(function() {
   // Recalculate the total price when the radio button selection changes
@@ -379,30 +423,62 @@ $(document).ready(function () {
 
 
 // Unsaved Changes
-document.addEventListener('DOMContentLoaded', () => {
-  const form = document.getElementById('booking-form');
-  let isFormDirty = false;
+// document.addEventListener('DOMContentLoaded', () => {
+//   const form = document.getElementById('booking-form');
+//   let isFormDirty = false;
 
-  form.addEventListener('input', () => {
-    isFormDirty = true;
-  });
+//   form.addEventListener('input', () => {
+//     isFormDirty = true;
+//   });
 
-  const cancelButton = document.querySelector('.cancel-button');
-  cancelButton.addEventListener('click', () => {
-    if (isFormDirty) {
-      const unsavedChangesModal = new bootstrap.Modal(document.getElementById('unsavedChangesModal'));
-      unsavedChangesModal.show();
-    } else {
-      window.location.href = 'admin_dashboard.php';
-    }
-  });
+//   const cancelButton = document.querySelector('.cancel-button');
+//   cancelButton.addEventListener('click', () => {
+//     if (isFormDirty) {
+//       const unsavedChangesModal = new bootstrap.Modal(document.getElementById('unsavedChangesModal'));
+//       unsavedChangesModal.show();
+//     } else {
+//       window.location.href = 'admin_dashboard.php';
+//     }
+//   });
 
-  const proceedButton = document.getElementById('proceedButton');
-  proceedButton.addEventListener('click', () => {
-    window.location.href = 'admin_dashboard.php';
-  });
+//   const proceedButton = document.getElementById('proceedButton');
+//   proceedButton.addEventListener('click', () => {
+//     window.location.href = 'admin_dashboard.php';
+//   });
+// });
+
+let formChanged = false;
+
+// Function to handle input changes
+function handleInputChange(event) {
+  formChanged = true;
+}
+
+// Attach event listeners to all input fields to track changes
+document.querySelectorAll('#booking-form input, #booking-form select').forEach(input => {
+  input.addEventListener('change', handleInputChange);
 });
 
+// Function to handle cancel button click
+function handleCancel() {
+  if (formChanged) {
+    const unsavedChangesModal = new bootstrap.Modal(document.getElementById('unsavedChangesModal'));
+    unsavedChangesModal.show();
+  } else {
+    window.location.href = 'admin_dashboard.php';
+  }
+}
+
+// Function to handle proceed button click in the modal
+document.getElementById('proceedButton').addEventListener('click', function () {
+  window.location.href = 'admin_dashboard.php';
+});
+
+// Optionally handle modal cancel button
+document.querySelector('.cancel-button-member').addEventListener('click', function () {
+  const unsavedChangesModal = bootstrap.Modal.getInstance(document.getElementById('unsavedChangesModal'));
+  unsavedChangesModal.hide();
+});
 
 
 

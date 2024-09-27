@@ -77,7 +77,7 @@ if (isset($_SESSION['userMemberID'])) {
           <h3 class="fw-bold ps-4">Fill up the form</h3>
           <form class="row dashboard-square-kebab needs-validation" id="booking-form" novalidate>
             <div class="col-md-4 mb-3">
-              <label for="firstName" class="form-label">First Name <span>*</span></label>
+              <label for="firstName" class="form-label">First Name</label>
               <input type="text" class="form-control" id="firstName" name="firstName" placeholder="" required onblur="handleInput(event)" oninput="validateName(event)" readonly value="<?php echo $customerFirstName; ?>" />
               <input type="hidden" name="hiddenFirstName" id="hiddenFirstName" value="<?php echo $customerFirstName; ?>" />
               <div class="valid-feedback">
@@ -99,7 +99,7 @@ if (isset($_SESSION['userMemberID'])) {
               </div>
             </div>
             <div class="col-md-4 mb-3">
-              <label for="lastName" class="form-label">Last Name <span>*</span></label>
+              <label for="lastName" class="form-label">Last Name</label>
               <input type="text" class="form-control" id="lastName" name="lastName" placeholder="" required onblur="handleInput(event)" oninput="validateName(event)" readonly value="<?php echo $customerLastName; ?>" />
               <input type="hidden" name="hiddenLastName" id="hiddenLastName" value="<?php echo $customerLastName; ?>" />
               <div class="valid-feedback">
@@ -110,7 +110,7 @@ if (isset($_SESSION['userMemberID'])) {
               </div>
             </div>
             <div class="col-md-4 mb-3">
-              <label for="birthDate" class="form-label">Birthdate <span>*</span></label>
+              <label for="birthDate" class="form-label">Birthdate</label>
               <input type="date" class="form-control" id="birthDate" required readonly value="<?php echo $customerBirthdate; ?>" />
               <input type="hidden" name="hiddenBirthDate" id="hiddenBirthDate" value="<?php echo $customerBirthdate; ?>" />
               <div class="valid-feedback">
@@ -121,7 +121,7 @@ if (isset($_SESSION['userMemberID'])) {
               </div>
             </div>
             <div class="col-md-4 mb-3">
-              <label for="contactNumber" class="form-label">Contact Number <span>*</span></label>
+              <label for="contactNumber" class="form-label">Contact Number</label>
               <input type="text" class="form-control" id="contactNumber" name="contactNumber" required minlength="11" maxlength="11" oninput="validateContactNumber(event)" readonly value="<?php echo $customerNumber; ?>" />
               <input type="hidden" name="hiddenContactNumber" id="hiddenContactNumber" value="<?php echo $customerNumber; ?>" />
               <div class="valid-feedback">
@@ -132,7 +132,7 @@ if (isset($_SESSION['userMemberID'])) {
               </div>
             </div>
             <div class="col-md-4 mb-3">
-              <label for="email" class="form-label">Email Address <span>*</span></label>
+              <label for="email" class="form-label">Email Address</label>
               <input type="email" class="form-control" id="email" name="email" required oninput="validateEmail(event)" readonly value="<?php echo $customerEmail; ?>" />
               <input type="hidden" name="hiddenContactNumber" id="hiddenContactNumber" value="<?php echo $customerNumber; ?>" />
               <div class="valid-feedback">
@@ -152,33 +152,6 @@ if (isset($_SESSION['userMemberID'])) {
                 Please provide a valid date.
               </div>
             </div>
-
-            <script>
-              document.addEventListener("DOMContentLoaded", function() {
-                const selectDateInput = document.getElementById('selectDate');
-                const today = new Date();
-                const year = today.getFullYear();
-                const month = today.getMonth();
-                const firstDayOfMonth = new Date(year, month, 1);
-                const lastDayOfMonth = new Date(year, month + 1, 0);
-
-                // Format dates to YYYY-MM-DD
-                const formatDateString = (date) => {
-                  const year = date.getFullYear();
-                  const month = String(date.getMonth() + 1).padStart(2, '0');
-                  const day = String(date.getDate()).padStart(2, '0');
-                  return `${year}-${month}-${day}`;
-                };
-
-                const minDate = formatDateString(today);
-                const maxDate = formatDateString(lastDayOfMonth);
-
-                selectDateInput.min = minDate;
-                selectDateInput.max = maxDate;
-              });
-            </script>
-
-
             <div class="col-md-3 mb-3">
               <label for="selectStartTime" class="form-label">Start Time <span>*</span></label>
               <input type="time" class="form-control" id="selectStartTime" name="selectStartTime" required min="10:00" oninput="adjustEndTime()">
@@ -258,8 +231,8 @@ if (isset($_SESSION['userMemberID'])) {
             <h2 class="modal-title  fw-bold text-center" id="success"><img src="src/images/icons/file.gif" alt="Wait Icon" class="modal-icons">On Process...</h2>
           </div>
           <div class="modal-body text-center">
-            <p>Your booking is now on process!<br>Please check your email for the details of your reservation.</p>
-            <p class="proceed">Proceed to pay your reservation through the provided Payment Details</p>
+            <p>Your booking is currently being processed.<br>Please note that you will receive an email with the details of your reservation once it has been confirmed.</p>
+            <p class="proceed">To secure your reservation, proceed to make payment using the details below:</p>
             <p class="gcash mb-0 pb-0">M****o M****o</p>
             <p class="gcash">GCash: 09123456789</p>
             <p>Send your proof of payment to <a href="https://www.facebook.com/Bevitore.Sta.Rosa">Bevitore’s Facebook Page.</a></p>

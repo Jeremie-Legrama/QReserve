@@ -1,3 +1,16 @@
+<?php
+//   include "encodeDecode.php";
+//   $key = "TheGreatestNumberIs73";
+//   include "src/get_data_from_database/get_admin_accounts.php";
+// $adminSessionID = $_SESSION['userAdminID'];
+// $adminUsername = " ";
+//   foreach($arrayAdminAccount as $admin){
+//     if($admin['adminID'] === $adminSessionID){      
+//       $adminUsername = decryptData($admin['adminUsername'], $key);
+//     } 
+//   }
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <body>
@@ -8,29 +21,50 @@
     <i class="bx bx-menu" id="btn"></i>
   </div>
   <ul class="nav-list">
+    <?php 
+      $currentPage = basename($_SERVER['PHP_SELF']);
+      
+      // Define sections and their respective pages
+      $sections = [
+        'dashboard' => ['admin_dashboard.php'],
+        'reservations' => ['admin_reservations_viewing.php'],
+        'walkin' => ['admin_walk_in_form.php'],
+        'add_member' => ['admin_add_new_member.php'],
+        'profile' => ['admin-profiles.php', 'member-profiles.php']
+      ];
+      
+      // Determine the active section
+      $activeSection = '';
+      foreach ($sections as $section => $pages) {
+        if (in_array($currentPage, $pages)) {
+          $activeSection = $section;
+          break;
+        }
+      }
+    ?>
     <li>
-      <a href="admin_dashboard.php">
+      <a href="admin_dashboard.php" class="<?= ($activeSection == 'dashboard') ? 'active' : '' ?>">
         <i class="bx bx-home"></i>
         <span class="links_name">Home</span>
       </a>
       <span class="tooltip">Home</span>
     </li>
     <li>
-      <a href="admin_reservations_viewing.php">
+      <a href="admin_reservations_viewing.php" class="<?= ($activeSection == 'reservations') ? 'active' : '' ?>">
         <i class="bx bx-book"></i>
         <span class="links_name">Reservations Viewing</span>
       </a>
       <span class="tooltip">Reservations</span>
     </li>
     <li>
-      <a href="admin_walk_in_form.php">
+      <a href="admin_walk_in_form.php" class="<?= ($activeSection == 'walkin') ? 'active' : '' ?>">
         <i class="bx bx-file"></i>
         <span class="links_name">Walk-In Form</span>
       </a>
       <span class="tooltip">Walk-In</span>
     </li>
     <li>
-      <a href="admin_add_new_member.php">
+      <a href="admin_add_new_member.php" class="<?= ($activeSection == 'add_member') ? 'active' : '' ?>">
         <i class="bx bx-user"></i>
         <span class="links_name">Add New Member</span>
       </a>
@@ -39,8 +73,8 @@
     <li class="profile">
       <div class="profile-details">
         <div class="name_job">
-          <div class="name">Admin</div>
-          <div class="job">Front-Desk</div>
+          <div class="name"><?php echo $adminUsername;?></div>
+          <div class="job">Front-Desk/Admin</div>
         </div>
       </div>
       <!-- Change the logout link to trigger the modal -->

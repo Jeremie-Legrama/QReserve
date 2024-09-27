@@ -93,16 +93,18 @@ if (isset($_POST['login'])) {
           exit();
         }
       } else {
-        $error_message = "Email and Password are mismatched."; // Set error message
+        $error_message = "Email or Password are mismatched."; // Set error message
       }
     }
   }
 }
 ?>
 
-
-
-
+<style>
+        ::-ms-reveal {
+        display: none !important;
+    }
+</style>
 
 <!DOCTYPE html>
 <html lang="en">

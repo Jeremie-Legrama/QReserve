@@ -61,6 +61,29 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 
+// Select date are only per month
+document.addEventListener("DOMContentLoaded", function() {
+  const selectDateInput = document.getElementById('selectDate');
+  const today = new Date();
+
+  // Calculate the date 4 weeks from today
+  const fourWeeksFromToday = new Date();
+  fourWeeksFromToday.setDate(today.getDate() + 28);
+
+  // Format dates to YYYY-MM-DD
+  const formatDateString = (date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
+  const minDate = formatDateString(today);
+  const maxDate = formatDateString(fourWeeksFromToday);
+
+  selectDateInput.min = minDate;
+  selectDateInput.max = maxDate;
+});
 
 //For Contact Number
 function validateContactNumber(event) {
@@ -170,20 +193,39 @@ function adjustEndTime() {
   }
 }
 
+
 function validateEndTime() {
+  const startTimeInput = document.getElementById('selectStartTime');
   const endTimeInput = document.getElementById('selectEndTime');
   const endTimeFeedback = document.getElementById('endTimeFeedback');
-  const [endHour, endMinute] = endTimeInput.value.split(':').map(Number);
 
-  if (endHour > 3 || (endHour === 3 && endMinute > 0)) {
-    // If end time is later than 3:00 AM
-    endTimeInput.setCustomValidity('End time must be at 3:00 AM or earlier.');
-    endTimeFeedback.textContent = 'End time must be at 3:00 AM or earlier.';
-  } else {
-    endTimeInput.setCustomValidity('');
-    endTimeFeedback.textContent = 'Please provide a valid end time.';
+  if (startTimeInput.value && endTimeInput.value) {
+    const [startHour, startMinute] = startTimeInput.value.split(':').map(Number);
+    const [endHour, endMinute] = endTimeInput.value.split(':').map(Number);
+
+    // Calculate total minutes for start and end times
+    const startTotalMinutes = startHour * 60 + startMinute;
+    const endTotalMinutes = endHour * 60 + endMinute;
+    let validEndTime = false;
+
+    if (endTotalMinutes < startTotalMinutes) {
+      // Case where end time is in the next day
+      validEndTime = (endTotalMinutes + 24 * 60 - startTotalMinutes) >= 120 && endHour <= 3;
+    } else {
+      // Case where end time is on the same day
+      validEndTime = (endTotalMinutes - startTotalMinutes) >= 120;
+    }
+
+    if (validEndTime) {
+      endTimeInput.setCustomValidity('');
+      endTimeFeedback.textContent = 'Please provide a valid end time.';
+    } else {
+      endTimeInput.setCustomValidity('End time must be at least 2 hours after start time and no later than 3:00 AM.');
+      endTimeFeedback.textContent = 'End time must be at least 2 hours after start time and no later than 3:00 AM.';
+    }
   }
 }
+
 
 // Add event listeners
 document.getElementById('selectStartTime').addEventListener('input', adjustEndTime);

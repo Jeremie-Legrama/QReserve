@@ -1,9 +1,21 @@
 <?php
 session_start();
+date_default_timezone_set('Asia/Manila');
 if (isset($_SESSION["userSuperAdminID"]) || isset($_SESSION["userAdminID"])) { // Check for admin session too
   $visitors = 0;
 
   $today = date('Y-m-d');
+  include "connect_database.php";
+  include "encodeDecode.php";
+  $key = "TheGreatestNumberIs73";
+  include "src/get_data_from_database/get_admin_accounts.php";
+  $adminSessionID = $_SESSION['userAdminID'];
+  $adminUsername = " ";
+  foreach ($arrayAdminAccount as $admin) {
+    if ($admin['adminID'] === $adminSessionID) {
+      $adminUsername = decryptData($admin['adminUsername'], $key);
+    }
+  }
 ?>
 
   <!DOCTYPE html>
@@ -157,11 +169,11 @@ if (isset($_SESSION["userSuperAdminID"]) || isset($_SESSION["userAdminID"])) { /
               </div>
               <div class="col-md-3 mb-3">
                 <label for="selectEndTime" class="form-label">End Time <span>*</span></label>
-                <input type="time" class="form-control" id="selectEndTime" name="selectEndTime" required>
+                <input type="time" class="form-control" id="selectEndTime" name="selectEndTime" required oninput="validateEndTime()">
                 <div class="valid-feedback">
                   <!-- Looks good! -->
                 </div>
-                <div class="invalid-feedback">
+                <div class="invalid-feedback" id="endTimeFeedback">
                   Please provide a valid end time.
                 </div>
               </div>
@@ -247,8 +259,8 @@ if (isset($_SESSION["userSuperAdminID"]) || isset($_SESSION["userAdminID"])) { /
             <p class="mt-3 mb-0 text-center fw-bold">Are you sure you want to leave this page?</p>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-outline-primary cancel-button-member" data-bs-dismiss="modal">Cancel</button>
-            <button type="button" class="btn btn-primary create-button-member" data-bs-toggle="modal" id="proceedButton">Proceed</button>
+            <button type="button" class="btn btn-outline-primary cancel-button" data-bs-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-primary create-button" data-bs-toggle="modal" id="proceedButton">Proceed</button>
           </div>
         </div>
       </div>

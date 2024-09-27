@@ -129,7 +129,7 @@ function validateControlNumber(event) {
 
 
  //   For Validity Date
- /*document.addEventListener("DOMContentLoaded", function() {
+/* document.addEventListener("DOMContentLoaded", function() {
   const validityInput = document.querySelector("#validity");
 
   // Get today's date
@@ -177,181 +177,180 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 
-
-
-   //   Updated script for password toggle
-   document.addEventListener("DOMContentLoaded", function() {
-    const togglePassword1 = document.querySelector("#password-toggle-1");
-    const passwordInput1 = document.querySelector("#password");
-    const eyeIcon1 = togglePassword1.querySelector("i");
-  
-    togglePassword1.addEventListener("click", function() {
-      const type =
-        passwordInput1.getAttribute("type") === "password" ?
-        "text" :
-        "password";
-      passwordInput1.setAttribute("type", type);
-  
-      // Toggle eye icon classes
-      eyeIcon1.classList.toggle("fa-eye-slash");
-      eyeIcon1.classList.toggle("fa-eye");
+    //   Updated script for password toggle
+    document.addEventListener("DOMContentLoaded", function() {
+      const togglePassword1 = document.querySelector("#password-toggle-1");
+      const passwordInput1 = document.querySelector("#password");
+      const eyeIcon1 = togglePassword1.querySelector("i");
+    
+      togglePassword1.addEventListener("click", function() {
+        const type =
+          passwordInput1.getAttribute("type") === "password" ?
+          "text" :
+          "password";
+        passwordInput1.setAttribute("type", type);
+    
+        // Toggle eye icon classes
+        eyeIcon1.classList.toggle("fa-eye-slash");
+        eyeIcon1.classList.toggle("fa-eye");
+      });
+    
+      const togglePassword2 = document.querySelector("#password-toggle-2");
+      const passwordInput2 = document.querySelector("#confirmPassword");
+      const eyeIcon2 = togglePassword2.querySelector("i");
+    
+      togglePassword2.addEventListener("click", function() {
+        const type =
+          passwordInput2.getAttribute("type") === "password" ?
+          "text" :
+          "password";
+        passwordInput2.setAttribute("type", type);
+    
+        // Toggle eye icon classes
+        eyeIcon2.classList.toggle("fa-eye-slash");
+        eyeIcon2.classList.toggle("fa-eye");
+      });
     });
+    
+    document.addEventListener("DOMContentLoaded", function() {
+      const passwordInput = document.querySelector("#password");
+      const confirmPasswordInput = document.querySelector("#confirmPassword");
+      const passwordMatchFeedback = document.querySelector("#passwordMatchFeedback");
+      const passwordMatch = document.querySelector("#passwordMatch");
+      const passwordMismatch = document.querySelector("#passwordMismatch");
+      const strengthIndicator = document.getElementById('password-strength-indicator');
+      const passwordRequirements = document.getElementById('password-requirements');
   
-    const togglePassword2 = document.querySelector("#password-toggle-2");
-    const passwordInput2 = document.querySelector("#confirmPassword");
-    const eyeIcon2 = togglePassword2.querySelector("i");
+      const uppercaseIndicator = document.getElementById('uppercase');
+      const numberIndicator = document.getElementById('number');
+      const specialIndicator = document.getElementById('special');
+      const lengthIndicator = document.getElementById('length');
   
-    togglePassword2.addEventListener("click", function() {
-      const type =
-        passwordInput2.getAttribute("type") === "password" ?
-        "text" :
-        "password";
-      passwordInput2.setAttribute("type", type);
+      function checkPasswordStrength(input) {
+          const password = input.value;
   
-      // Toggle eye icon classes
-      eyeIcon2.classList.toggle("fa-eye-slash");
-      eyeIcon2.classList.toggle("fa-eye");
-    });
+          const strongRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})/;
+          const mediumRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{6,})/;
+  
+          let strength = 'Weak';
+          strengthIndicator.innerHTML = '<span style="color:red">Weak password</span>';
+          input.classList.add('is-invalid');
+          input.classList.remove('is-valid');
+          input.setCustomValidity('Password strength is weak. Please enter a stronger password.');
+  
+          if (strongRegex.test(password)) {
+              strength = 'Strong';
+              strengthIndicator.innerHTML = '<span style="color:green">Strong password</span>';
+              input.classList.add('is-valid');
+              input.classList.remove('is-invalid');
+              input.setCustomValidity('');
+          } else if (mediumRegex.test(password)) {
+              strength = 'Moderate';
+              strengthIndicator.innerHTML = '<span style="color:orange">Moderate password</span>';
+              input.classList.add('is-valid');
+              input.classList.remove('is-invalid');
+              input.setCustomValidity('');
+          }
+  
+          updatePasswordRequirements(password);
+          return strength;
+      }
+  
+      function updatePasswordRequirements(password) {
+          let allMet = true;
+  
+          // Uppercase letter
+          if (/[A-Z]/.test(password)) {
+              uppercaseIndicator.style.display = 'none';
+          } else {
+              uppercaseIndicator.style.display = 'block';
+              allMet = false;
+          }
+  
+          // Number
+          if (/[0-9]/.test(password)) {
+              numberIndicator.style.display = 'none';
+          } else {
+              numberIndicator.style.display = 'block';
+              allMet = false;
+          }
+  
+          // Special character
+          if (/[!@#$%^&*]/.test(password)) {
+              specialIndicator.style.display = 'none';
+          } else {
+              specialIndicator.style.display = 'block';
+              allMet = false;
+          }
+  
+          // Length
+          if (password.length >= 8) {
+              lengthIndicator.style.display = 'none';
+          } else {
+              lengthIndicator.style.display = 'block';
+              allMet = false;
+          }
+  
+          // Hide or show the requirements list
+          passwordRequirements.style.display = allMet ? 'none' : 'block';
+      }
+  
+      function checkPasswordMatch() {
+          const password = passwordInput.value;
+          const confirmPassword = confirmPasswordInput.value;
+  
+          if (confirmPassword === password) {
+              confirmPasswordInput.classList.add('is-valid');
+              confirmPasswordInput.classList.remove('is-invalid');
+              passwordMatchFeedback.style.display = 'block';
+              passwordMismatch.style.display = 'none';
+              confirmPasswordInput.setCustomValidity('');
+          } else {
+              confirmPasswordInput.classList.add('is-invalid');
+              confirmPasswordInput.classList.remove('is-valid');
+              passwordMatchFeedback.style.display = 'none';
+              passwordMismatch.style.display = 'block';
+              confirmPasswordInput.setCustomValidity('Passwords do not match.');
+          }
+      }
+  
+      passwordInput.addEventListener("input", function() {
+          checkPasswordStrength(passwordInput);
+          checkPasswordMatch();
+      });
+  
+      confirmPasswordInput.addEventListener("input", checkPasswordMatch);
+  
+      const form = document.querySelector('form');
+      form.addEventListener('submit', function(event) {
+          const passwordStrength = checkPasswordStrength(passwordInput);
+  
+          if (passwordStrength === 'Weak' || passwordInput.value !== confirmPasswordInput.value) {
+              event.preventDefault();
+  
+              if (passwordStrength === 'Weak') {
+                  passwordInput.classList.remove('is-valid');
+                  passwordInput.classList.add('is-invalid');
+                  passwordInput.focus();
+              }
+  
+              if (passwordInput.value !== confirmPasswordInput.value) {
+                  confirmPasswordInput.classList.remove('is-valid');
+                  confirmPasswordInput.classList.add('is-invalid');
+                  confirmPasswordInput.focus();
+              }
+          }
+      });
+  
+      // Initially hide the requirements list
+      passwordRequirements.style.display = 'none';
+  
+      // Show the requirements list when the user starts typing
+      passwordInput.addEventListener("focus", function() {
+          passwordRequirements.style.display = 'block';
+      });
   });
   
-  document.addEventListener("DOMContentLoaded", function() {
-    const passwordInput = document.querySelector("#password");
-    const confirmPasswordInput = document.querySelector("#confirmPassword");
-    const passwordMatchFeedback = document.querySelector("#passwordMatchFeedback");
-    const passwordMatch = document.querySelector("#passwordMatch");
-    const passwordMismatch = document.querySelector("#passwordMismatch");
-    const strengthIndicator = document.getElementById('password-strength-indicator');
-    const passwordRequirements = document.getElementById('password-requirements');
-
-    const uppercaseIndicator = document.getElementById('uppercase');
-    const numberIndicator = document.getElementById('number');
-    const specialIndicator = document.getElementById('special');
-    const lengthIndicator = document.getElementById('length');
-
-    function checkPasswordStrength(input) {
-        const password = input.value;
-
-        const strongRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})/;
-        const mediumRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{6,})/;
-
-        let strength = 'Weak';
-        strengthIndicator.innerHTML = '<span style="color:red">Weak password</span>';
-        input.classList.add('is-invalid');
-        input.classList.remove('is-valid');
-        input.setCustomValidity('Password strength is weak. Please enter a stronger password.');
-
-        if (strongRegex.test(password)) {
-            strength = 'Strong';
-            strengthIndicator.innerHTML = '<span style="color:green">Strong password</span>';
-            input.classList.add('is-valid');
-            input.classList.remove('is-invalid');
-            input.setCustomValidity('');
-        } else if (mediumRegex.test(password)) {
-            strength = 'Moderate';
-            strengthIndicator.innerHTML = '<span style="color:orange">Moderate password</span>';
-            input.classList.add('is-valid');
-            input.classList.remove('is-invalid');
-            input.setCustomValidity('');
-        }
-
-        updatePasswordRequirements(password);
-        return strength;
-    }
-
-    function updatePasswordRequirements(password) {
-        let allMet = true;
-
-        // Uppercase letter
-        if (/[A-Z]/.test(password)) {
-            uppercaseIndicator.style.display = 'none';
-        } else {
-            uppercaseIndicator.style.display = 'block';
-            allMet = false;
-        }
-
-        // Number
-        if (/[0-9]/.test(password)) {
-            numberIndicator.style.display = 'none';
-        } else {
-            numberIndicator.style.display = 'block';
-            allMet = false;
-        }
-
-        // Special character
-        if (/[!@#$%^&*]/.test(password)) {
-            specialIndicator.style.display = 'none';
-        } else {
-            specialIndicator.style.display = 'block';
-            allMet = false;
-        }
-
-        // Length
-        if (password.length >= 8) {
-            lengthIndicator.style.display = 'none';
-        } else {
-            lengthIndicator.style.display = 'block';
-            allMet = false;
-        }
-
-        // Hide or show the requirements list
-        passwordRequirements.style.display = allMet ? 'none' : 'block';
-    }
-
-    function checkPasswordMatch() {
-        const password = passwordInput.value;
-        const confirmPassword = confirmPasswordInput.value;
-
-        if (confirmPassword === password) {
-            confirmPasswordInput.classList.add('is-valid');
-            confirmPasswordInput.classList.remove('is-invalid');
-            passwordMatchFeedback.style.display = 'block';
-            passwordMismatch.style.display = 'none';
-            confirmPasswordInput.setCustomValidity('');
-        } else {
-            confirmPasswordInput.classList.add('is-invalid');
-            confirmPasswordInput.classList.remove('is-valid');
-            passwordMatchFeedback.style.display = 'none';
-            passwordMismatch.style.display = 'block';
-            confirmPasswordInput.setCustomValidity('Passwords do not match.');
-        }
-    }
-
-    passwordInput.addEventListener("input", function() {
-        checkPasswordStrength(passwordInput);
-        checkPasswordMatch();
-    });
-
-    confirmPasswordInput.addEventListener("input", checkPasswordMatch);
-
-    const form = document.querySelector('form');
-    form.addEventListener('submit', function(event) {
-        const passwordStrength = checkPasswordStrength(passwordInput);
-
-        if (passwordStrength === 'Weak' || passwordInput.value !== confirmPasswordInput.value) {
-            event.preventDefault();
-
-            if (passwordStrength === 'Weak') {
-                passwordInput.classList.remove('is-valid');
-                passwordInput.classList.add('is-invalid');
-                passwordInput.focus();
-            }
-
-            if (passwordInput.value !== confirmPasswordInput.value) {
-                confirmPasswordInput.classList.remove('is-valid');
-                confirmPasswordInput.classList.add('is-invalid');
-                confirmPasswordInput.focus();
-            }
-        }
-    });
-
-    // Initially hide the requirements list
-    passwordRequirements.style.display = 'none';
-
-    // Show the requirements list when the user starts typing
-    passwordInput.addEventListener("focus", function() {
-        passwordRequirements.style.display = 'block';
-    });
-});
 
 
 
@@ -488,26 +487,59 @@ document.getElementById('validity').addEventListener('keydown', function(event) 
 
 
 
-document.addEventListener('DOMContentLoaded', () => {
-  const form = document.getElementById('booking-form');
-  let isFormDirty = false;
+// document.addEventListener('DOMContentLoaded', () => {
+//   const form = document.getElementById('booking-form');
+//   let isFormDirty = false;
 
-  form.addEventListener('input', () => {
-    isFormDirty = true;
-  });
+//   form.addEventListener('input', () => {
+//     isFormDirty = true;
+//   });
 
-  const cancelButton = document.querySelector('.cancel-button');
-  cancelButton.addEventListener('click', () => {
-    if (isFormDirty) {
-      const unsavedChangesModal = new bootstrap.Modal(document.getElementById('unsavedChangesModal'));
-      unsavedChangesModal.show();
-    } else {
-      window.location.href = 'member-profiles.php';
-    }
-  });
+//   const cancelButton = document.querySelector('.cancel-button');
+//   cancelButton.addEventListener('click', () => {
+//     if (isFormDirty) {
+//       const unsavedChangesModal = new bootstrap.Modal(document.getElementById('unsavedChangesModal'));
+//       unsavedChangesModal.show();
+//     } else {
+//       window.location.href = 'member-profiles.php';
+//     }
+//   });
 
-  const proceedButton = document.getElementById('proceedButton');
-  proceedButton.addEventListener('click', () => {
-    window.location.href = 'member-profiles.php';
-  });
+//   const proceedButton = document.getElementById('proceedButton');
+//   proceedButton.addEventListener('click', () => {
+//     window.location.href = 'member-profiles.php';
+//   });
+// });
+
+let formChanged = false;
+
+// Function to handle input changes
+function handleInputChange(event) {
+  formChanged = true;
+}
+
+// Attach event listeners to all input fields to track changes
+document.querySelectorAll('#booking-form input, #booking-form select').forEach(input => {
+  input.addEventListener('change', handleInputChange);
+});
+
+// Function to handle cancel button click
+function handleCancel() {
+  if (formChanged) {
+    const unsavedChangesModal = new bootstrap.Modal(document.getElementById('unsavedChangesModal'));
+    unsavedChangesModal.show();
+  } else {
+    window.location.href = 'admin_dashboard.php';
+  }
+}
+
+// Function to handle proceed button click in the modal
+document.getElementById('proceedButton').addEventListener('click', function () {
+  window.location.href = 'admin_dashboard.php';
+});
+
+// Optionally handle modal cancel button
+document.querySelector('.cancel-button-member').addEventListener('click', function () {
+  const unsavedChangesModal = bootstrap.Modal.getInstance(document.getElementById('unsavedChangesModal'));
+  unsavedChangesModal.hide();
 });

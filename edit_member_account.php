@@ -26,7 +26,15 @@ if (isset($_SESSION["userSuperAdminID"])) {
     }
   }
 
+  include "src/get_data_from_database/get_super_admin_accounts.php";
+  $superAdminSessionID = $_SESSION['userSuperAdminID'];
+  $superAdminUsername = "";
 
+  foreach ($arraySuperAdminAccount as $superAdmin) {
+      if ($superAdmin['superAdminID'] === $superAdminSessionID) {
+          $superAdminUsername = decryptData($superAdmin['superAdminUsername'], $key);
+      }
+  }
 ?>
   <!DOCTYPE html>
   <!-- Created by CodingLab |www.youtube.com/CodingLabYT-->
@@ -141,7 +149,7 @@ if (isset($_SESSION["userSuperAdminID"])) {
           </div>
           <div class="col-md-6 mb-2">
             <label for="controlNumber" class="form-label">Control Number <span>*</span></label>
-            <input type="text" value="<?php echo $membershipID; ?>" class="form-control" id="controlNumber" placeholder="Enter control number here (e.g., 00-0000)" name="controlNumber" required minlength="7" maxlength="7" oninput="validateControlNumber(event)">
+            <input type="text" value="<?php echo $membershipID; ?>" class="form-control" id="controlNumber" placeholder="Enter control number here (e.g., 00-0000)" name="controlNumber" required minlength="7" maxlength="7" oninput="validateControlNumber(event)" readonly>
             <div class="valid-feedback">
               <!-- Looks good! -->
             </div>
@@ -151,7 +159,7 @@ if (isset($_SESSION["userSuperAdminID"])) {
           </div>
           <div class="col-md-6 mb-2">
             <label for="validity" class="form-label">Validity Date <span>*</span></label>
-            <input type="date" value="<?php echo $validityDate; ?>" class="form-control" id="validity" placeholder="Enter birthDate here" name="validity" required onblur="handleInput(event)" oninput="validateUsername(event)">
+            <input type="date" value="<?php echo $validityDate; ?>" class="form-control" id="validity" placeholder="Enter birthDate here" name="validity" required onblur="handleInput(event)" oninput="validateUsername(event)" readonly>
             <div class="valid-feedback">
               <!-- Looks good! -->
             </div>
@@ -188,19 +196,15 @@ if (isset($_SESSION["userSuperAdminID"])) {
           </div>
           <div class="row justify-content-end mt-5">
             <div class="col-12 col-md-2 mb-2 mb-md-0">
-              <button class="btn btn-primary w-100 create-button" type="submit" id="create-admin-button">Create</button>
+              <button class="btn btn-primary w-100 create-button" type="submit" id="create-admin-button">Edit</button>
             </div>
             <div class="col-12 col-md-2 mb-2 mb-md-0">
               <button class="btn btn-outline-primary w-100 cancel-button" type="button">Cancel</button>
             </div>
           </div>
         </form>
-
-
       </div>
     </section>
-
-
 
     <!-- Add this div at the end of your HTML body to contain the modal -->
     <div class="modal fade" id="confirmEditAdmin" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="successModalLabel" aria-hidden="true">

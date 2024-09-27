@@ -9,6 +9,18 @@ $key = "TheGreatestNumberIs73";
 
 if (isset($_SESSION["userSuperAdminID"])) {
   $superAdminID = $_SESSION["userSuperAdminID"];
+
+
+
+  include "src/get_data_from_database/get_super_admin_accounts.php";
+  $superAdminSessionID = $_SESSION['userSuperAdminID'];
+  $superAdminUsername = "";
+
+  foreach ($arraySuperAdminAccount as $superAdmin) {
+      if ($superAdmin['superAdminID'] === $superAdminSessionID) {
+          $superAdminUsername = decryptData($superAdmin['superAdminUsername'], $key);
+      }
+  }
 ?>
   <!DOCTYPE html>
   <!-- Created by CodingLab |www.youtube.com/CodingLabYT-->
@@ -73,9 +85,11 @@ if (isset($_SESSION["userSuperAdminID"])) {
             </tr>
           </thead>
           <tbody>
-                <?php foreach ($arrayMemberAccount as $memberAccount) { if($memberAccount['validity']  === "Valid"){ ?>
+                <?php foreach ($arrayMemberAccount as $memberAccount) { ?>
                     <tr>
+                <?php if($memberAccount['validity'] === 'Valid'){ ?>
                         <td><input type='checkbox' class='member-checkbox' name='member[]' value='<?php echo $memberAccount['customerID']; ?>'></td>
+                <?php }else{echo "<td></td>";} ?>
                         <td><?php echo htmlspecialchars(decryptData($memberAccount['customerFirstName'], $key) . " " . decryptData($memberAccount['customerMiddleName'], $key) . " " . decryptData($memberAccount['customerLastName'], $key)); ?></td>
                         <td><?php echo htmlspecialchars(decryptData($memberAccount['membershipID'], $key)); ?></td>
                         <td><?php echo htmlspecialchars(decryptData($memberAccount['customerBirthdate'], $key)); ?></td>
@@ -83,10 +97,13 @@ if (isset($_SESSION["userSuperAdminID"])) {
                         <td><?php echo htmlspecialchars(decryptData($memberAccount['customerEmail'], $key)); ?></td>
                         <td><?php echo htmlspecialchars($memberAccount['validityDate']); ?></td>
                         <td>
-  <span class="<?php echo ($memberAccount['validity'] == 'Valid')? "badge bg-success" : "badge bg-danger";?>"><?php echo $memberAccount['validity'];?></span>
+                        <span class="<?php echo ($memberAccount['validity'] == 'Valid') ? "badge bg-success" : "badge bg-danger";?>">
+    <?php echo ($memberAccount['validity'] == 'Valid') ? "Active" : $memberAccount['validity'];?>
+</span>
+
 </td>
                     </tr>
-                <?php } else {} } ?>
+                <?php } ?>
             </tbody>
         </table>
         <div>
